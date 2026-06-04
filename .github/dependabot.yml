@@ -9,7 +9,8 @@ updates:
       day: "monday"
       time: "08:00"
       timezone: "America/New_York"
-    open-pull-requests-limit: 5
+    # Paused — re-enable (set to 5) when repo moves to GHAS-enabled org
+    open-pull-requests-limit: 0
     groups:
       # Group minor/patch updates to reduce PR noise
       minor-and-patch:
@@ -33,7 +34,8 @@ updates:
       day: "monday"
       time: "08:00"
       timezone: "America/New_York"
-    open-pull-requests-limit: 5
+    # Paused — re-enable (set to 5) when repo moves to GHAS-enabled org
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
       - "ci"
