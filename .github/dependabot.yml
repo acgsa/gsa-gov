@@ -1,0 +1,41 @@
+version: 2
+
+updates:
+  # npm dependencies (Next.js, Payload CMS, all devDependencies)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    groups:
+      # Group minor/patch updates to reduce PR noise
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    # Dependabot PRs go to main but must pass branch protection (1 review + CI)
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # GitHub Actions workflow dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "ci"

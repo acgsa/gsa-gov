@@ -26,32 +26,34 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   sast:
-    name: SAST (CodeQL)
+    name: SAST (Semgrep)
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write # Required to upload CodeQL results
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [javascript-typescript]
+    # Semgrep is free and does not require GitHub Advanced Security
+    container:
+      image: semgrep/semgrep:latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          queries: security-and-quality
+      - name: Run Semgrep
+        run: semgrep ci --config=auto --json --output=semgrep-results.json || true
+        env:
+          # Optional: set SEMGREP_APP_TOKEN if you have a Semgrep Cloud account
+          # for dashboard visibility. Scan still runs without it.
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
+      - name: Fail on high-severity findings
+        run: |
+          python3 -c "
+          import json, sys
+          with open('semgrep-results.json') as f:
+              data = json.load(f)
+          high = [r for r in data.get('results', []) if r.get('extra', {}).get('severity', '').upper() in ('ERROR', 'WARNING')]
+          if high:
+              for r in high:
+                  print(f\"{r['path']}:{r['start']['line']} [{r['extra']['severity']}] {r['check_id']}\")
+              sys.exit(1)
+          print(f'Semgrep: {len(data.get(\"results\", []))} total findings, 0 high/error severity')
+          "
 
   dependency-review:
     name: Dependency Review
