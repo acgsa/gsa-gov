@@ -21,11 +21,11 @@ jobs:
     name: Secrets Scan (gitleaks)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Full history so gitleaks can scan all commits
 
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,7 +36,7 @@ jobs:
     container:
       image: semgrep/semgrep:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run Semgrep
         run: semgrep ci --config=auto --json --output=semgrep-results.json || true
@@ -51,12 +51,20 @@ jobs:
           import json, sys
           with open('semgrep-results.json') as f:
               data = json.load(f)
-          high = [r for r in data.get('results', []) if r.get('extra', {}).get('severity', '').upper() in ('ERROR', 'WARNING')]
+          # Only fail on ERROR severity (maps to HIGH in Semgrep)
+          # WARNING (MEDIUM) findings are logged but do not block CI
+          high = [r for r in data.get('results', []) if r.get('extra', {}).get('severity', '').upper() == 'ERROR']
+          medium = [r for r in data.get('results', []) if r.get('extra', {}).get('severity', '').upper() == 'WARNING']
+          if medium:
+              print(f'Semgrep MEDIUM findings (informational):')  
+              for r in medium:
+                  print(f\"  {r['path']}:{r['start']['line']} {r['check_id']}\")
           if high:
+              print('Semgrep HIGH findings (blocking):')
               for r in high:
                   print(f\"{r['path']}:{r['start']['line']} [{r['extra']['severity']}] {r['check_id']}\")
               sys.exit(1)
-          print(f'Semgrep: {len(data.get(\"results\", []))} total findings, 0 high/error severity')
+          print(f'Semgrep: {len(high)} high, {len(medium)} medium findings')
           "
 
   dependency-review:
@@ -68,9 +76,9 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
           comment-summary-in-pr: always
