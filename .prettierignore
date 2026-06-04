@@ -1,0 +1,11 @@
+# Submodule — not part of this project's codebase
+agentic-coding-playbook/
+
+# Build outputs
+.next/
+out/
+
+# Generated files
+payload-types.ts
+generated-schema.graphql
+package-lock.json
