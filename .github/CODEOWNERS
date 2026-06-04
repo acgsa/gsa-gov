@@ -1,0 +1,30 @@
+# CODEOWNERS
+#
+# These owners are automatically requested for review when a PR
+# touches the matching paths. Requires branch protection to enforce.
+#
+# Format: <pattern> <@owner or @org/team>
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything not matched below
+*                           @acgsa/gsa-gov-admins
+
+# Content blocks and templates — super admin only (modular architecture)
+src/blocks/                 @acgsa/gsa-gov-admins
+src/templates/              @acgsa/gsa-gov-admins
+src/collections/            @acgsa/gsa-gov-admins
+src/payload.config.ts       @acgsa/gsa-gov-admins
+
+# Security and compliance — any change needs admin review
+AGENTS.md                   @acgsa/gsa-gov-admins
+SECURITY.md                 @acgsa/gsa-gov-admins
+CODING_PRACTICES.md         @acgsa/gsa-gov-admins
+docs/risk-assessment.md     @acgsa/gsa-gov-admins
+
+# CI/CD and infrastructure — admin review required
+.github/                    @acgsa/gsa-gov-admins
+Dockerfile                  @acgsa/gsa-gov-admins
+docker-compose.yml          @acgsa/gsa-gov-admins
+
+# Architecture decisions — admin review required
+docs/decisions/             @acgsa/gsa-gov-admins
