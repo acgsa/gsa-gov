@@ -133,13 +133,25 @@ Rate: **Likelihood** 1 (Rare) – 5 (Almost Certain) | **Impact** 1 (Negligible)
 
 ### T4 — Insecure Code Generation (Risk Score: 9)
 
-| Field                 | Value                                                                                                                                             |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Treatment**         | Mitigate                                                                                                                                          |
-| **Planned Controls**  | (1) Configure CodeQL SAST scan in CI; (2) Add OWASP Dependency Check; (3) Ensure all AI code is reviewed against CODING_PRACTICES.md before merge |
-| **Responsible Party** | Alison Childs                                                                                                                                     |
-| **Target Completion** | Before first production deployment                                                                                                                |
-| **Verification**      | Zero high/critical findings in CodeQL reports for 30 consecutive days                                                                             |
+| Field                 | Value                                                                                                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Treatment**         | Mitigate                                                                                                                                                                                                |
+| **Planned Controls**  | (1) Semgrep SAST in CI (free, no GHAS required — replaces CodeQL); (2) eslint-plugin-security in ESLint config; (3) Ensure all AI code is reviewed against CODING_PRACTICES.md before merge            |
+| **Status**            | Semgrep + eslint-plugin-security implemented as of 2026-06-04. CodeQL unavailable (requires GitHub Advanced Security, not on org plan). Upgrade org plan before ATO to enable CodeQL for full coverage. |
+| **Responsible Party** | Alison Childs                                                                                                                                                                                           |
+| **Target Completion** | Before first production deployment                                                                                                                                                                      |
+| **Verification**      | Zero high/critical Semgrep findings in CI for 30 consecutive days                                                                                                                                      |
+
+### Supply Chain — Next.js Version Constraint (Accepted Risk)
+
+| Field                 | Value                                                                                                                                                                                                                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Treatment**         | Accept (pending upstream fix)                                                                                                                                                                                                                                                      |
+| **Finding**           | `next@15.4.11` is the highest version `@payloadcms/next@3.85.0` supports via peer dependency. Next.js CVEs fixed in `>=15.5.x` (DoS, cache poisoning, XSS via CSP nonces, middleware bypass) cannot be resolved until Payload releases a compatible version.                      |
+| **Risk Score**        | HIGH (per npm audit) — mitigated by context: FIPS Low / public data only; no PII; middleware not used for auth; CSP nonces not yet configured; DoS risk acceptable for informational site pre-launch.                                                                              |
+| **Planned Controls**  | Monitor [Payload releases](https://github.com/payloadcms/payload/releases) weekly for `next >= 15.5.x` peer dep support. Upgrade immediately when available. Dependabot will surface this automatically.                                                                           |
+| **Responsible Party** | Alison Childs                                                                                                                                                                                                                                                                      |
+| **Verification**      | Re-run `npm audit` after each Payload version bump; confirm 0 high/critical findings before production deployment                                                                                                                                                                  |
 
 ### T10 — Human Over-Trust (Risk Score: 9)
 
@@ -169,12 +181,13 @@ Based on this assessment, the residual risk of deploying GitHub Copilot as the A
 
 [x] **Conditionally Acceptable** — Proceed after completing:
 
-- [ ] Enable GitHub branch protection on `main`
-- [ ] Configure CodeQL SAST in CI
-- [ ] Add pre-commit secrets scanning hook
-- [ ] Enable GitHub secret scanning on the repository
+- [x] Enable GitHub branch protection on `main` — done 2026-06-04
+- [x] Configure SAST in CI — Semgrep added 2026-06-04 (CodeQL pending org GitHub Advanced Security upgrade)
+- [x] Add pre-commit secrets scanning hook — gitleaks pre-commit installed 2026-06-04
+- [ ] Enable GitHub secret scanning on the repository — requires GitHub Advanced Security (org plan)
 - [ ] Confirm GitHub Copilot training data opt-out at org level
 - [ ] Assign ISSO and document IR contact
+- [ ] Resolve next@15.4.x HIGH CVEs — blocked on Payload 15.5.x peer dep support
 
 | Role               | Name          | Signature | Date |
 | ------------------ | ------------- | --------- | ---- |
