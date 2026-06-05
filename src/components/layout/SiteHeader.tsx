@@ -72,7 +72,7 @@ export function SiteHeader() {
           </motion.div>
           <motion.span
             style={{ fontSize: titleSize + "rem" }}
-            className="font-garamond text-white font-normal text-center leading-snug tracking-wide whitespace-nowrap"
+            className="font-garamond text-white font-bold text-center leading-snug tracking-wide whitespace-nowrap"
           >
             U.S. General Services Administration
           </motion.span>
