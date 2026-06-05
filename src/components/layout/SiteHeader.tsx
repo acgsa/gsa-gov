@@ -29,8 +29,8 @@ export function SiteHeader() {
   // Shrink seal: 52px → 34px
   const sealSize = useTransform(scrollY, [0, 80], [52, 34]);
 
-  // Title size: 1rem → 0.8rem
-  const titleSize = useTransform(scrollY, [0, 80], [1, 0.82]);
+  // Shrink title: 28px → 20px
+  const titleSize = useTransform(scrollY, [0, 80], [28, 20]);
 
   // Shadow appears on scroll
   const shadow = useTransform(
@@ -49,12 +49,12 @@ export function SiteHeader() {
       className="relative z-10 bg-gsa-navy"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-        {/* ── Left: date + weather ── */}
-        <div className="flex items-center gap-3 min-w-0">
+        {/* ── Left: date + weather, stacked ── */}
+        <div className="flex flex-col gap-0.5 min-w-0">
           <TodayDate />
           <span
             aria-label="Weather: Partly cloudy, 72 degrees Fahrenheit"
-            className="text-white/50 text-xs hidden sm:inline"
+            className="text-white/50 text-sm"
           >
             🌤 72°F
           </span>
@@ -71,8 +71,8 @@ export function SiteHeader() {
             />
           </motion.div>
           <motion.span
-            style={{ fontSize: titleSize + "rem" }}
-            className="font-garamond text-white font-bold text-center leading-snug tracking-wide whitespace-nowrap"
+            style={{ fontSize: titleSize }}
+            className="font-garamond text-white font-semibold text-center leading-snug tracking-wide whitespace-nowrap"
           >
             U.S. General Services Administration
           </motion.span>
