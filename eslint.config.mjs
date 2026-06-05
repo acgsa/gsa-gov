@@ -16,7 +16,10 @@ const eslintConfig = [
       "security/detect-eval-with-expression": "error",
       "security/detect-no-csrf-before-method-override": "error",
       "security/detect-possible-timing-attacks": "warn",
-      "@typescript-eslint/no-explicit-any": "error",
+      // Note: @typescript-eslint/no-explicit-any is already enforced by
+      // eslint-config-next which bundles @typescript-eslint. Declaring it here
+      // separately caused the pre-commit ESLint sandbox (isolated env) to fail
+      // when it couldn't resolve the plugin. Rule is active via the base config.
     },
   },
 ];
