@@ -23,14 +23,14 @@ export function MainNav() {
         aria-label="Main navigation"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 relative flex items-center">
-          {/* Search icon — pinned left */}
-          <button
-            type="button"
+          {/* Search icon — pinned left, links to /search */}
+          <Link
+            href="/search"
             className="p-2 -ml-2 text-white/60 hover:text-white transition-colors duration-200 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white z-10"
             aria-label="Search GSA.gov"
           >
             <Search className="w-[18px] h-[18px]" aria-hidden="true" />
-          </button>
+          </Link>
 
           {/* Desktop nav links — absolutely centered in the bar */}
           <ul
