@@ -50,3 +50,8 @@ next-env.d.ts
 
 # Docker (local override)
 docker-compose.override.yml
+
+# Content audit — local fetch/score cache and raw owner-provided inputs (public
+# gsa.gov source data; kept out of the repo per ADR-006)
+scripts/content-audit/.cache/
+data/

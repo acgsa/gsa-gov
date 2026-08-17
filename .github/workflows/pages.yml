@@ -1,0 +1,81 @@
+name: Deploy Content Audit to Pages
+
+# Publishes the static content-relevancy audit report + guide (and the
+# downloadable JSON/CSV artifacts) from docs/ as a browsable GitHub Pages site.
+# Public data only — see docs/decisions/ADR-006. No secrets, no build step.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/content-audit-report.html"
+      - "docs/content-audit-guide.html"
+      - "docs/content-audit-results.json"
+      - "docs/content-audit-results.csv"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+# Least-privilege: only what deploy-pages requires.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; don't cancel an in-progress publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    name: Assemble site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Assemble publishable site from docs/
+        run: |
+          set -euo pipefail
+          site="_site"
+          rm -rf "$site"
+          mkdir -p "$site"
+          # Only publish the reviewed audit artifacts — nothing else from docs/.
+          # Keep the original filenames so the in-page cross-links (report<->guide)
+          # and the guide's ADR references continue to resolve on Pages.
+          cp docs/content-audit-report.html "$site/content-audit-report.html"
+          cp docs/content-audit-guide.html "$site/content-audit-guide.html"
+          cp docs/content-audit-results.json "$site/content-audit-results.json"
+          cp docs/content-audit-results.csv "$site/content-audit-results.csv"
+          # Landing page redirects to the report.
+          cat > "$site/index.html" <<'HTML'
+          <!doctype html>
+          <html lang="en"><head><meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>GSA.gov Content Relevancy Audit</title>
+          <meta http-equiv="refresh" content="0; url=content-audit-report.html">
+          </head><body>
+          <p>Redirecting to the <a href="content-audit-report.html">GSA.gov Content Relevancy Audit report</a>.</p>
+          </body></html>
+          HTML
+          # Disable Jekyll processing (serve files verbatim).
+          touch "$site/.nojekyll"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
