@@ -1,8 +1,12 @@
 /** Static asset module declarations for TypeScript */
 
-// SVG files → string URL (use with <img>, not next/image)
+// SVG files → Next.js StaticImageData (use with next/image, matching how
+// Next statically imports SVGs). Mirrors the raster declarations below so the
+// type resolves consistently whether or not next-env.d.ts is present (CI runs
+// `tsc --noEmit` on a fresh checkout without a prior build).
 declare module "*.svg" {
-  const src: string;
+  import type { StaticImageData } from "next/image";
+  const src: StaticImageData;
   export default src;
 }
 
