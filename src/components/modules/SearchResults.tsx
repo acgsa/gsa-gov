@@ -121,7 +121,6 @@ export function SearchResults({ initialQuery }: SearchResultsProps) {
                 placeholder="Search GSA.gov…"
                 className="min-w-0 flex-1 bg-transparent px-3 py-3 text-base text-gray-900 outline-none"
                 aria-label="Search query"
-                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={!initialQuery}
               />
               <button

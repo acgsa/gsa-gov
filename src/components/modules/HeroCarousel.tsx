@@ -140,7 +140,9 @@ export function HeroCarousel() {
             transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
           >
             <Image
+              // eslint-disable-next-line security/detect-object-injection -- current is a bounded numeric state index (0..slides.length-1)
               src={slides[current].image}
+              // eslint-disable-next-line security/detect-object-injection -- current is a bounded numeric state index (0..slides.length-1)
               alt={slides[current].alt}
               fill
               className="object-cover object-center"

@@ -55,3 +55,13 @@ docker-compose.override.yml
 # gsa.gov source data; kept out of the repo per ADR-006)
 scripts/content-audit/.cache/
 data/
+
+# Vendored USDS reference app — local design reference only. Not imported at
+# runtime (design tokens were hand-extracted into src/lib/tokens/). Carries its
+# own .git + Vite toolchain, so it is intentionally excluded from this repo to
+# keep the shipped Next.js/Payload build clean for Pages demo and host deploy.
+vendor/
+
+# Oversized source video — exceeds GitHub's 100 MB hard limit and is not
+# referenced by any page. Kept local only; not committed.
+src/assets/videos/ed_fox.mov
