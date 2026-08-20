@@ -21,31 +21,6 @@ function SiLinkedin() {
   );
 }
 
-const footerSections = {
-  Partners: [
-    { label: "SAM.gov", href: "https://sam.gov" },
-    { label: "USA.gov", href: "https://usa.gov" },
-    { label: "CIO.gov", href: "https://cio.gov" },
-    { label: "FOIA.gov", href: "https://foia.gov" },
-    { label: "Login.gov", href: "https://login.gov" },
-  ],
-  Resources: [
-    { label: "About GSA", href: "/about" },
-    { label: "News", href: "/news" },
-    { label: "Accessibility Statement", href: "/accessibility" },
-    { label: "Vulnerability Disclosure", href: "/security" },
-    { label: "Performance Reports", href: "/performance" },
-    { label: "FOIA requests", href: "/foia" },
-    { label: "No FEAR Act", href: "/no-fear-act" },
-    { label: "Office of the Inspector General", href: "/oig" },
-  ],
-  "For Employees": [
-    { label: "For your startup", href: "/startups" },
-    { label: "HR Links", href: "/hr" },
-    { label: "IT Service Desk", href: "/it-help" },
-  ],
-} as const;
-
 const socialLinks = [
   { label: "GSA on X (Twitter)", href: "https://x.com/usgsa", Icon: SiX },
   {
@@ -70,28 +45,46 @@ const socialLinks = [
   },
 ] as const;
 
+const gsaLinks = [
+  { label: "About GSA", href: "/about-gsa" },
+  { label: "Leadership", href: "/resources/leadership" },
+  { label: "Contact", href: "/media/contact" },
+  { label: "Latest News", href: "/news" },
+];
+
+const workLinks = [
+  { label: "Acquisition", href: "/acquisition" },
+  { label: "Real Estate", href: "/real-estate" },
+  { label: "Technology", href: "/technology" },
+  { label: "Small Business", href: "/acquisition/small-business" },
+  { label: "Opportunities for partners", href: "#" },
+];
+
+const accountabilityLinks = [
+  { label: "Privacy", href: "#" },
+  { label: "Accessibility", href: "#" },
+  { label: "FOIA", href: "#" },
+  { label: "Vulnerability Disclosure", href: "#" },
+  { label: "Inspector General", href: "#" },
+  { label: "Budget & Performance", href: "#" },
+  { label: "USA.gov", href: "https://usa.gov" },
+];
+
 export function SiteFooter() {
   return (
     <footer className="bg-gsa-navy text-white" aria-label="Site footer">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-12">
-          {/* ── Seal + name + social ── */}
-          <div className="flex flex-col items-start gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-[1.15fr_1fr_1fr_1fr] gap-10 sm:gap-x-8 sm:gap-y-12 lg:gap-16">
+          {/* ── Col 1: Seal + wordmark + social ── */}
+          <div className="flex flex-col gap-5 sm:col-span-3 lg:col-span-1">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo/GSA_Seal_Updated_2026.svg"
-              alt="GSA Seal"
-              width={72}
-              height={72}
-              className="opacity-90"
-            />
-            <p className="text-white/60 text-sm font-medium leading-snug max-w-[180px]">
+            <img src="/logo/New.svg" alt="GSA Seal" width={100} height={100} />
+            <p className="font-garamond text-white font-bold text-[22px] leading-[1.2] max-w-[220px]">
               U.S. General Services Administration
             </p>
-            {/* Social icons */}
             <nav
               aria-label="GSA social media"
-              className="flex items-center gap-3 mt-1"
+              className="flex items-center gap-5"
             >
               {socialLinks.map(({ label, href, Icon }) => (
                 <a
@@ -100,34 +93,74 @@ export function SiteFooter() {
                   aria-label={label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/40 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
+                  className="text-white/60 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
                 >
-                  <Icon size={18} />
+                  <Icon size={20} />
                 </a>
               ))}
             </nav>
           </div>
 
-          {/* ── Link columns ── */}
-          {Object.entries(footerSections).map(([title, links]) => (
-            <div key={title}>
-              <h2 className="text-white/40 text-[11px] font-semibold uppercase tracking-widest mb-4">
-                {title}
-              </h2>
-              <ul className="space-y-2.5" role="list">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-white/65 hover:text-white text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* ── Col 2: GSA ── */}
+          <div>
+            <h2 className="text-white font-semibold text-[12px] tracking-[0.14em] uppercase mb-6">
+              GSA
+            </h2>
+            <p className="font-garamond italic text-usds-steel-500 text-[18px] leading-[1.35] mb-8 max-w-[260px]">
+              GSA is the engine of the United States federal government,
+              accelerating mission delivery for the American people.
+            </p>
+            <ul className="space-y-4" role="list">
+              {gsaLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-white/75 hover:text-white text-[15px] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ── Col 3: Work with GSA ── */}
+          <div>
+            <h2 className="text-white font-semibold text-[12px] tracking-[0.14em] uppercase mb-6">
+              Work with GSA
+            </h2>
+            <ul className="space-y-4" role="list">
+              {workLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-white/75 hover:text-white text-[15px] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ── Col 4: Accountability ── */}
+          <div>
+            <h2 className="text-white font-semibold text-[12px] tracking-[0.14em] uppercase mb-6">
+              Accountability
+            </h2>
+            <ul className="space-y-4" role="list">
+              {accountabilityLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-white/75 hover:text-white text-[15px] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 

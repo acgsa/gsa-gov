@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
  * topbar, nav, and ticker so all rows are the exact same color at every
  * scroll position (no seam, no per-row color mismatch).
  *
- * The child chrome components (SiteHeader, MainNav desktop nav,
+ * The child chrome components (SiteHeaderSideBySide, MainNav desktop nav,
  * LiveTicker) are transparent and let this surface show through.
  *
  * Background: fully opaque navy (#00111C) at the top → 0.92 translucent once

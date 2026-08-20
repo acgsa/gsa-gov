@@ -91,8 +91,20 @@ interface SearchResultsProps {
   initialQuery: string;
 }
 
+/**
+ * Read the `?q=` value from the URL. Under static export there is no server
+ * `searchParams`, so the query must be resolved on the client. Guarded for SSR
+ * (returns "" on the server); the lazy `useState` initializer below runs it
+ * once on the client at mount, avoiding a setState-in-effect cascade.
+ */
+function readQueryFromUrl(fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const q = new URLSearchParams(window.location.search).get("q");
+  return q ? q.trim() : fallback;
+}
+
 export function SearchResults({ initialQuery }: SearchResultsProps) {
-  const [query, setQuery] = useState(initialQuery);
+  const [query, setQuery] = useState(() => readQueryFromUrl(initialQuery));
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {

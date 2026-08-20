@@ -1,4 +1,4 @@
-import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SiteHeaderSideBySide } from "@/components/layout/SiteHeaderSideBySide";
 import { MainNav } from "@/components/layout/MainNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { StickyChrome } from "@/components/layout/StickyChrome";
@@ -11,7 +11,7 @@ export default function AcquisitionLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <StickyChrome id="site-chrome">
-        <SiteHeader />
+        <SiteHeaderSideBySide />
         <MainNav />
       </StickyChrome>
       <main id="main-content" className="flex-1">

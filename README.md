@@ -66,6 +66,33 @@ Runs lint, type check, and tests in sequence.
 
 ---
 
+## Sandbox Preview (cloud.gov)
+
+A **shareable preview** of the site can be deployed to a personal cloud.gov
+sandbox space via the Node.js buildpack. This is a **throwaway preview only** —
+public content, no database, no secrets — and sandbox spaces are **wiped every
+~90 days**. It is **not** an ATO'd or production environment. See
+[ADR-007](docs/decisions/ADR-007-cloudgov-sandbox-preview.md).
+
+```bash
+# 1. Log in to your personal sandbox space
+cf login -a api.fr.cloud.gov --sso
+
+# 2. Deploy (uses manifest.yml)
+cf push
+
+# 3. Point the app at its assigned route, then restage
+cf set-env gsa-gov-preview NEXT_PUBLIC_SITE_URL https://<app>.app.cloud.gov
+cf restage gsa-gov-preview
+
+# Teardown when finished
+cf delete gsa-gov-preview -r
+```
+
+The app URL is `https://<app>.app.cloud.gov/` (shown in `cf push` output).
+
+---
+
 ## Project Structure
 
 ```

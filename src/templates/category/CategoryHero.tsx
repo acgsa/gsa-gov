@@ -9,6 +9,8 @@ export interface CategoryHeroProps {
   intro: string;
   heroSrc?: string | StaticImageData;
   heroAlt?: string;
+  /** Vertical focal point of the hero image (CSS object-position). Defaults to center. */
+  heroPosition?: string;
   /** Retained for API compatibility — no longer affects visual styling */
   accent?: string;
   stats?: CategoryStat[];
@@ -29,6 +31,7 @@ export function CategoryHero({
   intro,
   heroSrc,
   heroAlt = "",
+  heroPosition = "center",
   stats = [],
 }: CategoryHeroProps) {
   return (
@@ -45,7 +48,8 @@ export function CategoryHero({
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center scale-110"
+            style={{ objectPosition: heroPosition }}
+            className="object-cover scale-110"
           />
         )}
 

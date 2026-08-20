@@ -80,7 +80,7 @@ export function VideoCarousel() {
     >
       {/* ── Section label ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-5">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-[0.2em]">
+        <p className="text-[12px] font-semibold text-usds-steel-500 uppercase tracking-[0.14em]">
           Watch
         </p>
       </div>
@@ -97,6 +97,12 @@ export function VideoCarousel() {
                   scale: isCenter ? 1 : 0.88,
                   opacity: isCenter ? 1 : 0.5,
                 }}
+                // Collapsed (side) cards grow slightly on hover to signal they
+                // are clickable. The center card is already at full size, so no
+                // hover scale is applied to it.
+                whileHover={
+                  isCenter ? undefined : { scale: 0.94, opacity: 0.8 }
+                }
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="flex-none w-[72vw] sm:w-[48vw] lg:w-[36vw] max-w-[520px]"
               >
@@ -142,7 +148,7 @@ export function VideoCarousel() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="mt-3 text-sm text-gray-600 text-center font-medium leading-snug px-2"
+                    className="mt-3 text-sm text-usds-steel-600 text-center font-medium leading-snug px-2"
                   >
                     {video.caption}
                   </motion.p>
@@ -170,8 +176,8 @@ export function VideoCarousel() {
             className={[
               "rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gsa-blue",
               i === selected
-                ? "w-5 h-2 bg-gray-700"
-                : "w-2 h-2 bg-gray-300 hover:bg-gray-500",
+                ? "w-5 h-2 bg-usds-steel-700"
+                : "w-2 h-2 bg-usds-steel-400 hover:bg-usds-steel-600",
             ].join(" ")}
           />
         ))}

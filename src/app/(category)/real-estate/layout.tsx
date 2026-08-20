@@ -1,4 +1,4 @@
-import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SiteHeaderSideBySide } from "@/components/layout/SiteHeaderSideBySide";
 import { MainNav } from "@/components/layout/MainNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { StickyChrome } from "@/components/layout/StickyChrome";
@@ -12,7 +12,7 @@ export default function RealEstateLayout({
     <div className="flex flex-col min-h-screen">
       {/* ── Sticky chrome ── */}
       <StickyChrome id="site-chrome">
-        <SiteHeader />
+        <SiteHeaderSideBySide />
         <MainNav />
       </StickyChrome>
 
