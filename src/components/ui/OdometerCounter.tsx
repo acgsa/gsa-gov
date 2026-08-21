@@ -3,27 +3,21 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-// Match text-sm (14px) so digits sit inline with surrounding ticker text
-const DIGIT_H = 14;
-
 /** A single rolling digit column (0–9 strip) */
 function RollingDigit({ digit }: { digit: number }) {
   return (
-    // position:relative is REQUIRED — without it the absolute child escapes
-    // overflow:hidden and bleeds into adjacent rows (the bug in the screenshot)
     <span
       aria-hidden="true"
       style={{
         display: "inline-block",
         overflow: "hidden",
-        verticalAlign: "bottom",
-        height: DIGIT_H,
-        width: "0.6em",
+        height: "1.2em",
+        width: "0.62em",
         position: "relative",
       }}
     >
       <motion.span
-        animate={{ y: -digit * DIGIT_H }}
+        animate={{ y: `${-digit * 1.2}em` }}
         initial={false}
         transition={{ type: "tween", duration: 0.1, ease: "easeOut" }}
         style={{
@@ -38,8 +32,8 @@ function RollingDigit({ digit }: { digit: number }) {
           <span
             key={d}
             style={{
-              height: DIGIT_H,
-              lineHeight: `${DIGIT_H}px`,
+              height: "1.2em",
+              lineHeight: "1.2",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -55,17 +49,24 @@ function RollingDigit({ digit }: { digit: number }) {
 }
 
 interface OdometerCounterProps {
+  /** Fixed starting value the counter begins at on every load. */
   initialValue?: number;
+  /** Ceiling the counter climbs toward and stops at. */
+  targetValue?: number;
+  /** Small increment added each tick so only the lower digits move. */
   incrementPerTick?: number;
   tickInterval?: number;
 }
 
 export function OdometerCounter({
-  initialValue = 8_432_157_284,
-  incrementPerTick = 73,
-  tickInterval = 180,
+  initialValue = 59_728_590_021,
+  targetValue = 60_000_000_000,
+  incrementPerTick = 500,
+  tickInterval = 1200,
 }: OdometerCounterProps) {
-  const [value, setValue] = useState(initialValue);
+  // Deterministic fixed start so SSR and the first client render agree
+  // (no hydration mismatch) and the number is the same on every load.
+  const [value, setValue] = useState(Math.min(initialValue, targetValue));
   const prefersReducedMotion = useRef(false);
 
   useEffect(() => {
@@ -77,18 +78,24 @@ export function OdometerCounter({
   useEffect(() => {
     if (prefersReducedMotion.current) return;
     const id = setInterval(() => {
-      setValue((n) => n + incrementPerTick + Math.floor(Math.random() * 50));
+      setValue((n) => {
+        // Slow, steady climb via a small fixed step so only the lower digits
+        // move. Stops at the target and does not exceed it.
+        if (n >= targetValue) return targetValue;
+        const next =
+          n + incrementPerTick + Math.floor(Math.random() * incrementPerTick);
+        return next >= targetValue ? targetValue : next;
+      });
     }, tickInterval);
     return () => clearInterval(id);
-  }, [incrementPerTick, tickInterval]);
+  }, [incrementPerTick, tickInterval, targetValue]);
 
   const formatted = value.toLocaleString("en-US");
   const chars = formatted.split("");
 
   return (
     <span
-      className="inline-flex items-end font-mono text-gsa-savings font-bold tabular text-sm"
-      style={{ lineHeight: `${DIGIT_H}px` }}
+      className="inline-flex items-center font-mono text-gsa-savings font-bold tabular text-sm"
       aria-label={`Taxpayer savings: ${formatted} dollars`}
     >
       <span>$</span>
@@ -96,11 +103,7 @@ export function OdometerCounter({
         /\d/.test(char) ? (
           <RollingDigit key={i} digit={parseInt(char, 10)} />
         ) : (
-          <span
-            key={i}
-            className="text-gsa-savings/50"
-            style={{ margin: "0 1px" }}
-          >
+          <span key={i} style={{ margin: "0 1px" }}>
             {char}
           </span>
         ),

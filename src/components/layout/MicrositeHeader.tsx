@@ -56,7 +56,7 @@ export function MicrositeHeader({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo/New.svg"
+              src="/logo/GSA_Seal_Updated_2026.svg"
               alt="GSA Seal"
               className="w-10 h-10 object-contain drop-shadow-md flex-shrink-0"
             />

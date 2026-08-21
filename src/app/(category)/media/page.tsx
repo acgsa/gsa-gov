@@ -6,7 +6,7 @@ import type {
   CategoryEditorial,
 } from "@/templates/categoryAccents";
 import { GSA_LEADERSHIP } from "@/lib/leadership-data";
-import heroImg from "@/assets/images/ED/A6509724-2.webp";
+import heroImg from "@/assets/images/ED/HBDzzIAWsAAXBxn.jpg";
 import story1 from "@/assets/images/BUILDING/GSA-Building-Blue-scaled.jpg";
 import story2 from "@/assets/images/ACCOUNTABILITY/pexels-rostislav-34281360.jpg";
 import story3 from "@/assets/images/ACCOUNTABILITY/pexels-ivan-drazic-20457695-20417783.jpg";
@@ -143,6 +143,7 @@ export default function AboutPage() {
       intro="Press releases, events, official photography, and leadership resources for journalists and media professionals covering the U.S. General Services Administration."
       heroSrc={heroImg}
       heroAlt="GSA Administrator addressing the press"
+      heroPosition="center 25%"
       topics={topics}
       pullQuote={{
         quote:

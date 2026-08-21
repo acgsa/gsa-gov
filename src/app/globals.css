@@ -2,6 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   US Design System color tokens — CSS custom properties
+   Source: src/lib/tokens/colors.ts → vendor/usds/tokens/base.tokens.json
+   @see docs/decisions/ADR-002-usds-color-palette.md
+
+   Use these properties in:
+     - inline styles where Tailwind classes cannot reach (e.g. Framer Motion)
+     - CSS files that cannot import TypeScript
+
+   Prefer Tailwind classes (bg-usds-steel-200, text-usds-steel-500, etc.)
+   for all normal component styling.
+───────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* ── USDS steel scale ──────────────────────────────────────────────────── */
+  --usds-steel-50: #fafafc;
+  --usds-steel-100: #f4f5f8;
+  --usds-steel-200: #e6eaf0;
+  --usds-steel-300: #d3d9e4;
+  --usds-steel-400: #b9c3d4;
+  --usds-steel-500: #a7b4c9;
+  --usds-steel-600: #8792a3;
+  --usds-steel-700: #616875;
+  --usds-steel-800: #353a40;
+  --usds-steel-900: #1c1f22;
+  --usds-steel-950: #141618;
+
+  /* ── USDS blue scale ───────────────────────────────────────────────────── */
+  --usds-blue-50: #f7faff;
+  --usds-blue-100: #edf4ff;
+  --usds-blue-200: #d8e7ff;
+  --usds-blue-300: #b8d5ff;
+  --usds-blue-400: #8ebbfe;
+  --usds-blue-500: #72aafe;
+  --usds-blue-600: #5c8ace;
+  --usds-blue-700: #426393;
+  --usds-blue-800: #243651;
+  --usds-blue-900: #131d2b;
+  --usds-blue-950: #0d131c;
+
+  /* ── USDS red ──────────────────────────────────────────────────────────── */
+  --usds-red-500: #f23d59;
+  --usds-red-600: #c43148;
+  --usds-red-700: #8c2334;
+
+  /* ── USDS green ────────────────────────────────────────────────────────── */
+  --usds-green-500: #70cf44;
+  --usds-green-600: #5ba837;
+  --usds-green-700: #417827;
+
+  /* ── USDS orange ───────────────────────────────────────────────────────── */
+  --usds-orange-500: #f98a37;
+  --usds-orange-600: #ca702d;
+  --usds-orange-700: #914f20;
+
+  /* ── USDS gold ─────────────────────────────────────────────────────────── */
+  --usds-gold-500: #f5c32c;
+  --usds-gold-600: #c69e24;
+  --usds-gold-700: #8e711a;
+  --usds-gold-800: #4e3e0e;
+
+  /* ── USDS turquoise ────────────────────────────────────────────────────── */
+  --usds-turquoise-500: #80d2ed;
+  --usds-turquoise-600: #68aac0;
+  --usds-turquoise-700: #4a7a89;
+
+  /* ── USDS violet ───────────────────────────────────────────────────────── */
+  --usds-violet-500: #9598f7;
+  --usds-violet-600: #797bc8;
+  --usds-violet-700: #56588f;
+
+  /* ── USDS pink ─────────────────────────────────────────────────────────── */
+  --usds-pink-500: #f23d90;
+  --usds-pink-600: #c43174;
+  --usds-pink-700: #8c2353;
+
+  /* ── GSA semantic aliases ──────────────────────────────────────────────── */
+  --gsa-navy: #00111c; /* GSA-specific override; nearest USDS: blue/950 */
+  --gsa-navy-mid: #131d2b; /* USDS blue/900 */
+  --gsa-ticker: #0d131c; /* USDS blue/950 */
+  --gsa-live: #c43148; /* USDS red/600  */
+  --gsa-blue: #5c8ace; /* USDS blue/600 */
+  --gsa-blue-hover: #426393; /* USDS blue/700 */
+  --gsa-savings: #34d399; /* GSA-specific override; no USDS emerald */
+
+  /* ── Category accents ──────────────────────────────────────────────────── */
+  --accent-realestate: #ca702d; /* USDS orange/600 */
+  --accent-acquisition: #4a7a89; /* USDS turquoise/700 */
+  --accent-technology: #56588f; /* USDS violet/700 */
+  --accent-about: #8c2353; /* USDS pink/700 */
+  --accent-employees: #417827; /* USDS green/700 */
+}
+
 /* ─── Base reset ──────────────────────────────────────────────────────── */
 @layer base {
   *,
@@ -15,7 +107,7 @@
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-white text-usds-steel-800 antialiased;
   }
 }
 

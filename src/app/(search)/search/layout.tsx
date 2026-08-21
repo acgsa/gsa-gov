@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { GovBanner } from "@/components/layout/GovBanner";
 
 export const metadata: Metadata = {
   title: "Search — GSA.gov",
@@ -19,6 +20,9 @@ export default function SearchLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* ── Gov banner ── */}
+      <GovBanner />
+
       {/* ── Compact header ── */}
       <header className="bg-gsa-navy flex-shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center gap-4">
@@ -54,7 +58,7 @@ export default function SearchLayout({
 
           {/* Login */}
           <Link
-            href="/login"
+            href="#"
             className="text-white/60 hover:text-white text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded flex-shrink-0"
           >
             Login

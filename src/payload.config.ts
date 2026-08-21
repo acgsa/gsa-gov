@@ -3,6 +3,9 @@ import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import path from "path";
 import { fileURLToPath } from "url";
+import { Media } from "./collections/Media";
+import { Stories } from "./collections/Stories";
+import { Pages } from "./collections/Pages";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -13,12 +16,7 @@ export default buildConfig({
     user: "users",
   },
 
-  // Collections will be added here as they are created
-  // See src/collections/ — each file exports a Payload collection config
-  collections: [
-    // TODO: import and add collections
-    // e.g. import { Pages } from './collections/Pages'
-  ],
+  collections: [Media, Stories, Pages],
 
   // Globals will be added here
   globals: [

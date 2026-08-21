@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, EB_Garamond } from "next/font/google";
+import { Inter, JetBrains_Mono, EB_Garamond, Geist } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,8 +16,16 @@ const jetbrainsMono = JetBrains_Mono({
 
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  // Variable axis (400–800) — supports the design-spec weights (e.g. 474 on
+  // the homepage hero H1) alongside the standard 400/600/700 usages.
+  weight: "variable",
   variable: "--font-garamond",
+  display: "swap",
+});
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -28,6 +36,9 @@ export const metadata: Metadata = {
   },
   description:
     "The U.S. General Services Administration delivers value and savings in real estate, acquisition, technology, and other mission-support services across government.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({
@@ -38,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${ebGaramond.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${ebGaramond.variable} ${geist.variable}`}
     >
       <body className="font-sans">{children}</body>
     </html>

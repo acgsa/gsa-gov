@@ -41,6 +41,8 @@ export interface CategoryPageProps {
   /** Optional hero image (rendered as a duotone editorial panel) */
   heroSrc?: string | StaticImageData;
   heroAlt?: string;
+  /** Vertical focal point of the hero image (CSS object-position). Defaults to center. */
+  heroPosition?: string;
   /** Per-category accent color key — defaults to acquisition teal */
   accent?: CategoryAccent;
   /** Optional stat strip beneath the hero */
@@ -82,6 +84,7 @@ export function CategoryPage({
   intro,
   heroSrc,
   heroAlt = "",
+  heroPosition,
   accent,
   stats = [],
   wayfinder,
@@ -105,6 +108,7 @@ export function CategoryPage({
         intro={intro}
         heroSrc={heroSrc}
         heroAlt={heroAlt}
+        heroPosition={heroPosition}
         accent={accent}
         stats={stats}
       />

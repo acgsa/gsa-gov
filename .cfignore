@@ -1,0 +1,41 @@
+# .cfignore — files NOT uploaded to cloud.gov by `cf push`.
+# The Node.js buildpack builds on-platform: it runs a clean `npm install` and
+# then `npm run build`. We MUST NOT upload node_modules/ or .next/, or the
+# buildpack takes its "prebuild" path and tries to rebuild native modules,
+# which fails. See docs/decisions/ADR-007-cloudgov-sandbox-preview.md
+
+# Dependencies — reinstalled cleanly on-platform (leaving this out causes the
+# "Prebuild detected (node_modules already exists)" failure)
+node_modules
+node_modules/
+**/node_modules
+
+# Build output. `.next` is never uploaded. The static preview artifact (`out/`)
+# IS uploaded and served by the staticfile buildpack — see ADR-007.
+.next
+.next/
+dist
+build
+
+# Version control history — not needed at runtime
+.git
+.git/
+
+# Secrets — never upload
+.env
+.env.*
+!.env.example
+
+# Local-only / oversized reference material
+vendor
+data
+scripts/content-audit/.cache
+src/assets/videos
+docs/recovery-quarantine
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.swo
+coverage
+.nyc_output

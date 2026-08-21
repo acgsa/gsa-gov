@@ -133,7 +133,7 @@ function NavPanel({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/logo/New.svg"
+                  src="/logo/GSA_Seal_Updated_2026.svg"
                   alt="GSA Seal"
                   className="w-8 h-8 object-contain flex-shrink-0"
                 />
@@ -476,7 +476,7 @@ export function CategoryHeader({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo/New.svg"
+                src="/logo/GSA_Seal_Updated_2026.svg"
                 alt="GSA Seal"
                 className="w-9 h-9 object-contain drop-shadow-md flex-shrink-0"
               />

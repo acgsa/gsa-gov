@@ -9,7 +9,7 @@ import {
   useSpring,
   useReducedMotion,
 } from "framer-motion";
-import gsaSeal from "@/assets/logo/New.svg";
+import gsaSeal from "@/assets/logo/GSA_Seal_Updated_2026.svg";
 
 export interface ParallaxHeroProps {
   /** Image source. When omitted the hero renders the GSA seal on a Steel background. */

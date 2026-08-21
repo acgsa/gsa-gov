@@ -1,0 +1,24 @@
+---
+# cloud.gov sandbox PREVIEW ONLY — see docs/decisions/ADR-007-cloudgov-sandbox-preview.md
+# Not an ATO'd environment. Public content only. No secrets in this file.
+#
+# STATIC EXPORT preview: build locally with `npm run build:static` (produces
+# `out/`), then `cf push`. The staticfile buildpack serves the prebuilt files —
+# no on-platform build, tiny memory footprint (fits the 1G sandbox quota).
+#
+# Deploy:   npm run build:static && cf push
+# Teardown: cf delete gsa-gov-preview -r
+applications:
+  - name: gsa-gov-preview
+    # Push only the prebuilt static artifact, not the whole repo.
+    path: out
+    memory: 128M
+    disk_quota: 512M
+    instances: 1
+    buildpacks:
+      - staticfile_buildpack
+    health-check-type: http
+    health-check-http-endpoint: /
+    env:
+      # Non-secret; informational only for the static preview.
+      NEXT_PUBLIC_SITE_URL: "https://gsa-gov-preview.app.cloud.gov"
