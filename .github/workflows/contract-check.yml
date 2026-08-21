@@ -1,0 +1,41 @@
+# Universal behavioral contract prerequisite check (fail-closed).
+# Provisions the universal contract to the conventional home path from the
+# pinned agentic-coding-playbook submodule, then verifies it is available
+# offline. Ensures agent-invoking work has the contract present in CI.
+name: Contract Prerequisite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ensure-contract:
+    name: Ensure universal behavioral contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Provide the universal contract to the home path from the pinned
+      # submodule (single source of truth; no network fetch needed). The probe
+      # then verifies it offline and fails closed if absent.
+      - name: Provision universal behavioral contract from submodule
+        run: |
+          mkdir -p "$HOME/.agentic-coding-playbook"
+          cp agentic-coding-playbook/AGENTS.md "$HOME/.agentic-coding-playbook/AGENTS.md"
+
+      - name: Ensure contract is available (fail-closed)
+        run: python3 scripts/ensure-contract.py --root . --no-fetch
