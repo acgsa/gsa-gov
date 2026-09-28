@@ -101,10 +101,23 @@ function MissionPanel() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Panel 2 — $8B+ stat (tight below mission)
+// Panel 2 — the fraud ledger stat (tight below mission)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function StatPanel() {
+/**
+ * Read the user's motion preference once, synchronously, for the initial state.
+ *
+ * Guarded for `window` because this module is server-rendered first; a bare
+ * `matchMedia` call here throws during SSR and takes the whole page with it.
+ * Defaults to `false` (animate) so that a client which never reports a
+ * preference still gets the designed behaviour.
+ */
+function readPrefersReduced(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function LedgerPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: panelRef,
@@ -113,13 +126,15 @@ function StatPanel() {
   const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const y = useTransform(scrollYProgress, [0, 1], ["2rem", "0rem"]);
 
-  const [prefersReduced, setPrefersReduced] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
+  // The count-up on the big figure has to be suppressed for users who ask for
+  // reduced motion, and the preference can change mid-session (macOS exposes it
+  // as a live system toggle), so this subscribes rather than sampling once.
+  const [prefersReduced, setPrefersReduced] =
+    useState<boolean>(readPrefersReduced);
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
+    const onChange = () => setPrefersReduced(mq.matches);
+    onChange();
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
   }, []);
@@ -128,8 +143,7 @@ function StatPanel() {
     <motion.div
       ref={panelRef}
       style={{ opacity, y }}
-      className="w-full max-w-[760px] flex flex-col items-center justify-start text-center pt-4 pb-16"
-      aria-label="Fraud, waste, and abuse metrics"
+      className="w-full flex flex-col items-center justify-start pt-4 pb-16"
     >
       <InteractiveFraudStat prefersReduced={prefersReduced} />
     </motion.div>
@@ -227,7 +241,7 @@ function BreakdownPanel() {
  * SavingsHero — single tall scroll container:
  * - Sticky watercolor background image + dark overlay
  * - Panel 1 (100svh):  mission text cascade
- * - Panel 2 (compact): $8B+ stat
+ * - Panel 2 (compact): the fraud ledger (Uncovered / Stopped / Enforced)
  * - Panel 3 (compact): "Breakdown of the savings" intro cascade (still on bg)
  *
  * The container is 450svh tall so the background persists through all three panels.
@@ -298,7 +312,7 @@ export function SavingsHero() {
         style={{ height: "280svh" }}
       >
         <MissionPanel />
-        <StatPanel />
+        <LedgerPanel />
         <BreakdownPanel />
       </div>
     </div>

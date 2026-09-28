@@ -214,6 +214,49 @@ export const SAVINGS_HEADLINE_DOLLARS: number = 60_000_000_000;
 /** Rounded display label for the headline figure (hero big number). */
 export const SAVINGS_HEADLINE_LABEL = "$60B+";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Fraud ledger — the three core metrics shown in the /accountability/savings
+// hero: Uncovered / Stopped / Enforced.
+//
+// Deliberately a SEPARATE export from FRAUD_STAGES. FRAUD_STAGES still drives
+// the homepage teaser (SavingsTeaserScroll) and the "Total Savings Driven"
+// callout (SavingsScrollSection), both of which report the cumulative
+// contract-savings figure. The ledger below reports a narrower, audited
+// fraud-specific accounting, so the two sets of numbers are not interchangeable
+// and must not be collapsed into one list.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface FraudLedgerMetric {
+  /** Bold descriptor shown beneath the figure, e.g. "Uncovered" */
+  label: string;
+  /** Large display figure, e.g. "$13.1B" */
+  value: string;
+  /** One-line definition of what the figure counts */
+  caption: string;
+}
+
+export const FRAUD_LEDGER_EYEBROW = "GSA Fraud Ledger";
+
+export const FRAUD_LEDGER: FraudLedgerMetric[] = [
+  {
+    label: "Uncovered",
+    value: "$13.1B",
+    caption:
+      "Fraud identified through audits, investigations, and data analysis.",
+  },
+  {
+    label: "Stopped",
+    value: "$235.9M",
+    caption: "One-year federal contracting spending averted.",
+  },
+  {
+    label: "Enforced",
+    value: "$29.5M",
+    caption:
+      "Fraud enforcement actions, including indictments and settlements.",
+  },
+];
+
 export const FRAUD_STAGES: FraudStage[] = [
   {
     label: "Stopped",
