@@ -4,7 +4,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { X, ChevronDown, MoveRight } from "lucide-react";
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type RefObject,
+} from "react";
+import { createPortal } from "react-dom";
 import { getSolutionsFor } from "@/lib/gsa-solutions";
 import type { NewsArticle } from "@/lib/news-data";
 
@@ -44,6 +51,26 @@ interface MobileMenuProps {
   returnFocusRef?: RefObject<HTMLElement | null>;
 }
 
+/** No-op subscribe — the "has hydrated" value never changes after mount. */
+const subscribeNever = () => () => {};
+
+/**
+ * Returns false during SSR and on the hydrating render, true afterwards.
+ *
+ * Implemented with useSyncExternalStore rather than the usual
+ * `useState(false)` + `useEffect(() => setMounted(true))` pattern because the
+ * latter is a setState-inside-an-effect cascade that the project's
+ * react-hooks/set-state-in-effect lint rule rejects. useSyncExternalStore's
+ * separate server snapshot is the purpose-built API for this.
+ */
+function useHasHydrated() {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => true, // client snapshot
+    () => false, // server snapshot
+  );
+}
+
 export function MobileMenu({
   isOpen,
   onClose,
@@ -54,6 +81,24 @@ export function MobileMenu({
 }: MobileMenuProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  /**
+   * Portal target. The menu MUST be portaled to <body>.
+   *
+   * MainNav renders inside StickyChrome, which applies an inline
+   * `backdrop-filter`. Per CSS Containment/Filter Effects, any non-`none`
+   * filter or backdrop-filter value — including `blur(0px)` — makes that
+   * element a *containing block for fixed-position descendants*. Without the
+   * portal, this panel's `fixed inset-y-0` resolves against the ~124px-tall
+   * chrome box instead of the viewport: the scrolling link list collapses to
+   * zero height and the nav appears empty (only "Menu" and "Login" visible),
+   * and the backdrop covers only the header strip. Portaling to <body> takes
+   * the panel out of that containing block so `fixed` means "viewport" again.
+   *
+   * Mounted-gate: createPortal cannot run during SSR, so the first client
+   * render must match the server output (nothing) before we portal.
+   */
+  const mounted = useHasHydrated();
 
   // Close on Escape
   useEffect(() => {
@@ -96,7 +141,9 @@ export function MobileMenu({
     setOpenSection((current) => (current === href ? null : href));
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -393,6 +440,7 @@ export function MobileMenu({
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

@@ -79,17 +79,22 @@ export function LiveTicker() {
               aria-hidden="true"
             />
 
-            {/* ── Taxpayer Savings Accountability Tracker ── */}
-            <div className="flex items-center gap-1.5 flex-shrink-0">
-              <Link
-                href="/savings"
-                className="flex items-center gap-1.5 group text-white/80 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
-                aria-label="View the Taxpayer Savings accountability tracker"
-              >
-                <span className="font-bold">Taxpayer Savings</span>
-              </Link>
+            {/*
+              ── Taxpayer Savings Accountability Tracker ──
+              The label and the running figure are a single link. Readers were
+              clicking the green digits (the most eye-catching element in the
+              ticker) and getting nothing, so the anchor wraps both. The
+              odometer's own `aria-label` already reads the dollar amount, so
+              the anchor is labelled for its destination only.
+            */}
+            <Link
+              href="/savings"
+              className="flex items-center gap-1.5 flex-shrink-0 group text-white/80 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
+              aria-label="View the Taxpayer Savings accountability tracker"
+            >
+              <span className="font-bold">Taxpayer Savings</span>
               <OdometerCounter />
-            </div>
+            </Link>
           </div>
         </motion.div>
       )}

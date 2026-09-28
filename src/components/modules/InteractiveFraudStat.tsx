@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useMotionValue, useTransform } from "framer-motion";
-import { FRAUD_STAGES } from "@/lib/savings-data";
+import {
+  FRAUD_LEDGER,
+  FRAUD_LEDGER_EYEBROW,
+  type FraudLedgerMetric,
+} from "@/lib/savings-data";
 import { BRAND_GREEN } from "@/lib/tokens/colors";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -72,9 +76,16 @@ interface InteractiveFraudStatProps {
 
 /**
  * InteractiveFraudStat — the taxpayer-savings hero figure with three toggle
- * states (Uncovered / Stopped / Prosecuted). Only the big number and its
- * sub-caption react to the active stage. Fully keyboard-accessible via a
- * radiogroup pattern.
+ * states. Only the big number and its sub-caption react to the active stage.
+ * Fully keyboard-accessible via a radiogroup pattern.
+ *
+ * The figures come from `FRAUD_LEDGER`, not `FRAUD_STAGES`. Those two lists
+ * report different things and are deliberately separate exports: `FRAUD_STAGES`
+ * carries the broad contract-savings figure that still drives the homepage
+ * teaser and the "Total Savings Driven" callout, while `FRAUD_LEDGER` is the
+ * narrower audited fraud accounting (Uncovered / Stopped / Enforced) that this
+ * hero reports. Pointing this component at the wrong one silently republishes
+ * one set of numbers under the other's labels, so the import is load-bearing.
  */
 export function InteractiveFraudStat({
   prefersReduced,
@@ -82,23 +93,23 @@ export function InteractiveFraudStat({
   const [active, setActive] = useState(0);
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // eslint-disable-next-line security/detect-object-injection -- active is a bounded numeric state index (0..FRAUD_STAGES.length-1)
-  const stage = FRAUD_STAGES[active] ?? FRAUD_STAGES[0]!;
+  // eslint-disable-next-line security/detect-object-injection -- active is a bounded numeric state index (0..FRAUD_LEDGER.length-1)
+  const stage: FraudLedgerMetric = FRAUD_LEDGER[active] ?? FRAUD_LEDGER[0]!;
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
-      const next = (active + 1) % FRAUD_STAGES.length;
+      const next = (active + 1) % FRAUD_LEDGER.length;
       setActive(next);
 
-      // eslint-disable-next-line security/detect-object-injection -- next is computed via modulo over FRAUD_STAGES.length, always in range
+      // eslint-disable-next-line security/detect-object-injection -- next is computed via modulo over FRAUD_LEDGER.length, always in range
       btnRefs.current[next]?.focus();
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
-      const prev = (active - 1 + FRAUD_STAGES.length) % FRAUD_STAGES.length;
+      const prev = (active - 1 + FRAUD_LEDGER.length) % FRAUD_LEDGER.length;
       setActive(prev);
 
-      // eslint-disable-next-line security/detect-object-injection -- prev is computed via modulo over FRAUD_STAGES.length, always in range
+      // eslint-disable-next-line security/detect-object-injection -- prev is computed via modulo over FRAUD_LEDGER.length, always in range
       btnRefs.current[prev]?.focus();
     }
   };
@@ -109,7 +120,7 @@ export function InteractiveFraudStat({
         className="text-[11px] font-semibold tracking-[0.22em] uppercase mb-6"
         style={{ color: "rgba(52,211,153,0.7)" }}
       >
-        Fraud, Waste &amp; Abuse
+        {FRAUD_LEDGER_EYEBROW}
       </p>
 
       {/* Big animated figure */}
@@ -144,7 +155,7 @@ export function InteractiveFraudStat({
           border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
-        {FRAUD_STAGES.map((s, i) => {
+        {FRAUD_LEDGER.map((s, i) => {
           const isActive = i === active;
           return (
             <button

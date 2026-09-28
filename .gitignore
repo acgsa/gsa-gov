@@ -65,3 +65,7 @@ vendor/
 # Oversized source video — exceeds GitHub's 100 MB hard limit and is not
 # referenced by any page. Kept local only; not committed.
 src/assets/videos/ed_fox.mov
+
+# Agentic playbook universal-contract fallback cache (populated by
+# scripts/ensure-contract.py when the home path / submodule is unavailable)
+.agents/cache/

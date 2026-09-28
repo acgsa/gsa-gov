@@ -89,12 +89,29 @@ function extractReadable(
   return { text: $("body").text().replace(/\s+/g, " ").trim() };
 }
 
+/** Options for {@link fetchAndExtract}. */
+export interface FetchAndExtractOptions {
+  /**
+   * Treat a cached `fetchStatus: "error"` entry as a cache miss and re-fetch.
+   *
+   * Transport failures (DNS, TLS, timeout, abort) are cached alongside real
+   * HTTP results so a full run can resume without re-hammering the origin.
+   * That negative caching is wrong when the failure was environmental rather
+   * than a property of the page — a missing enterprise CA root, for example,
+   * makes every URL look like `error`. Enable this to let a later run repair
+   * those entries. Defaults to `false` so existing resume behavior is unchanged.
+   */
+  refetchErrors?: boolean;
+}
+
 /** Fetch + extract a single page, with cache. */
 export async function fetchAndExtract(
   normalizedUrl: string,
+  options: FetchAndExtractOptions = {},
 ): Promise<PageSignals> {
   const cached = await cache.get<PageSignals>("page", normalizedUrl);
-  if (cached) return cached;
+  const cachedIsError = cached?.fetchStatus === "error";
+  if (cached && !(cachedIsError && options.refetchErrors)) return cached;
 
   await sleep(config.perRequestDelayMs);
   const raw = await rawFetch(normalizedUrl);

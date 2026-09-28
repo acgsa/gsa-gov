@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, EB_Garamond, Geist } from "next/font/google";
+import { SITE_URL } from "@/lib/site-url";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,6 +31,14 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
+  /**
+   * Required for share previews. `og:image` / `twitter:image` are read by
+   * crawlers with no page context, so Next resolves the file-based
+   * `opengraph-image` convention and any relative metadata URL against this
+   * origin. Without it Next warns and guesses `http://localhost:3000`, which
+   * would publish share cards pointing at nothing.
+   */
+  metadataBase: SITE_URL,
   title: {
     default: "U.S. General Services Administration",
     template: "%s | GSA",
