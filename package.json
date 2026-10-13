@@ -23,7 +23,7 @@
     "@icons-pack/react-simple-icons": "13.13.0",
     "@mozilla/readability": "0.6.0",
     "@payloadcms/db-postgres": "3.85.0",
-    "@payloadcms/next": "3.85.0",
+    "@payloadcms/next": "3.88.0",
     "@payloadcms/richtext-lexical": "3.85.0",
     "autoprefixer": "10.5.0",
     "cheerio": "1.2.0",
